@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-chart
+  namespace: chart
+  labels:
+    app: web-chart
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: web-chart
+      labels:
+        app: web-chart
+    spec:
+      nodeSelector:
+        ram: high
+      containers:
+        - name: web-chart
+          image: ghcr.io/whoant/web-chart:VERSION
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "150Mi"
+              cpu: "150m"
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: web-chart
