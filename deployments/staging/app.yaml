@@ -17,7 +17,7 @@ spec:
         ram: high
       containers:
         - name: web-chart
-          image: ghcr.io/whoant221/buy-flower-admin-fe:VERSION
+          image: ghcr.io/whoant/web-chart:VERSION
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
