@@ -7,7 +7,6 @@ import ControlInput from './component/controlInput/controlInput';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 function App() {
     const [loading, setLoading] = useState(false);
     const [chartData, setChartData] = useState({
@@ -22,39 +21,9 @@ function App() {
         secondChart: true
     });
 
-    const handleFileChange = (e) => {
+    const handleFileChange = (e, result) => {
         const typeChart = e.target.name;
-        const file = e.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = async({ target }) => {
-            const parsedData = JSON.parse(target.result);
-            const result = parsedData?.bars.map(bar => {
-                const { close, high, low, open, timestamp } = bar;
-                return {
-                    x: new Date(Number(timestamp)),
-                    y: [Number(open), Number(high), Number(low), Number(close)]
-                }
-            })
-            setChartData({ ...chartData, [typeChart]: result, interval: '', symbol: '' })
-            // const csv = Papa.parse(target.result, { header: true });
-            // const parsedData = csv?.data;
-            // const result = []
-            // parsedData.forEach(item => {
-            //     const values = Object.values(item);
-            //     if (values.length < 4) {
-            //         return;
-            //     }
-            //     const [timestamp, open, high, low, close] = values;
-            //
-            //     result.push({
-            //         x: new Date(Number(timestamp)),
-            //         y: [Number(open), Number(high), Number(low), Number(close)]
-            //     });
-            // });
-            // setChartData({ ...chartData, [typeChart]: result, interval: '', symbol: '' })
-        };
-        reader.readAsText(file);
+        setChartData({ ...chartData, [typeChart]: result, interval: '', symbol: '' })
     }
 
     const handleLoadClick = async formData => {
@@ -62,7 +31,7 @@ function App() {
 
         try {
             setLoading(true);
-            const resp = await getChartFromBinance(symbol, '500', interval, { from, to });
+            const resp = await getChartFromBinance(symbol, '1000', interval, { from, to });
             setChartData({ ...chartData, firstChart: resp, interval, symbol })
         } catch (e) {
             console.error(e);

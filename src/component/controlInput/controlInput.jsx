@@ -6,10 +6,10 @@ import { LoadingButton } from '@mui/lab';
 
 
 const COUNT_CANDLE_PER_DAY = {
-    "1m": 1440,
-    "5m": 288,
-    "15m": 96,
-    "30m": 48,
+    "1m": 60 * 24,
+    "5m": 12 * 24,
+    "15m": 4 * 24,
+    "30m": 2 * 24,
     // "60m": 24,
     // "120m": 12,
     // "1d": 1
@@ -29,8 +29,8 @@ function ControlInput(props) {
         (state, newState) => ({ ...state, ...newState }),
         {
             symbol: "BNBUSDT",
-            interval: "5m",
-            from: moment().subtract(1, 'days').format("DD/MM/YYYY"),
+            interval: "1m",
+            from: moment().subtract(2, 'days').format("DD/MM/YYYY"),
             to: moment().format("DD/MM/YYYY"),
             network: 'bsc',
             smartContract: '0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae',
@@ -49,9 +49,32 @@ function ControlInput(props) {
         const to = moment(formInput.to, "DD/MM/YYYY")
         const days = moment.duration(to.diff(from)).asDays();
         const limit = days * COUNT_CANDLE_PER_DAY[formInput.interval]
+
         setLinkDexScreener(`https://io.dexscreener.com/u/chart/bars/${formInput.network}/${formInput.smartContract}?from=${from.unix() * 1000}&to=${(to.unix() + 1) * 1000}&res=${formInput.interval}&cb=${limit}`);
         setFileName(`${formInput.symbol}-${formInput.from}-${formInput.to}-${formInput.interval}`);
     }
+
+    const handleFileSubmit = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = async({ target }) => {
+            const parsedData = JSON.parse(target.result);
+            const result = [];
+
+            parsedData?.bars.forEach(bar => {
+                const { close, high, low, open, timestamp } = bar;
+                if (moment(timestamp) > moment(formInput.from, 'DD/MM/YYYY')) {
+                    result.push({
+                        x: new Date(Number(timestamp)),
+                        y: [Number(open), Number(high), Number(low), Number(close)]
+                    });
+                }
+            })
+            onFileChange(e, result);
+        };
+        reader.readAsText(file);
+    };
 
     const handleInput = evt => {
         const name = evt.target.name;
@@ -66,7 +89,7 @@ function ControlInput(props) {
                     <Button variant="contained" component="label">
                         Choose first file
                         <input hidden accept="text/csv" type="file" name="firstChart"
-                               onChange={onFileChange}/>
+                               onChange={handleFileSubmit}/>
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
@@ -106,7 +129,7 @@ function ControlInput(props) {
                     <Button variant="contained" component="label" color="error">
                         Choose second file
                         <input hidden accept="text" type="file" name="secondChart"
-                               onChange={onFileChange}/>
+                               onChange={handleFileSubmit}/>
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
