@@ -1,9 +1,8 @@
 import Chart from './component/chart/chart';
 import { Container, Grid } from '@mui/material';
 import { useState } from 'react';
-import Papa from 'papaparse';
 import ControlPanel from './component/controlPanel/controlPanel';
-import { getChartFromBinance } from './helpers/binance';
+import { getChartFromBinance } from './api/binance/helpers';
 import ControlInput from './component/controlInput/controlInput';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,6 +15,7 @@ function App() {
         symbol: '',
         interval: ''
     });
+
     const [isShow, setIsShow] = useState({
         firstChart: true,
         secondChart: true
@@ -27,22 +27,31 @@ function App() {
         const reader = new FileReader();
 
         reader.onload = async({ target }) => {
-            const csv = Papa.parse(target.result, { header: true });
-            const parsedData = csv?.data;
-            const result = []
-            parsedData.forEach(item => {
-                const values = Object.values(item);
-                if (values.length < 4) {
-                    return;
-                }
-                const [timestamp, open, high, low, close] = values;
-
-                result.push({
+            const parsedData = JSON.parse(target.result);
+            const result = parsedData?.bars.map(bar => {
+                const { close, high, low, open, timestamp } = bar;
+                return {
                     x: new Date(Number(timestamp)),
                     y: [Number(open), Number(high), Number(low), Number(close)]
-                });
-            });
+                }
+            })
             setChartData({ ...chartData, [typeChart]: result, interval: '', symbol: '' })
+            // const csv = Papa.parse(target.result, { header: true });
+            // const parsedData = csv?.data;
+            // const result = []
+            // parsedData.forEach(item => {
+            //     const values = Object.values(item);
+            //     if (values.length < 4) {
+            //         return;
+            //     }
+            //     const [timestamp, open, high, low, close] = values;
+            //
+            //     result.push({
+            //         x: new Date(Number(timestamp)),
+            //         y: [Number(open), Number(high), Number(low), Number(close)]
+            //     });
+            // });
+            // setChartData({ ...chartData, [typeChart]: result, interval: '', symbol: '' })
         };
         reader.readAsText(file);
     }

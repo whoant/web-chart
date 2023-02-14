@@ -1,5 +1,5 @@
-import { getKlines } from '../api/binance/api';
-import { formatToTimestamp } from './time';
+import { getKlines } from './api';
+import { formatToTimestamp } from '../../helpers/time';
 
 const getChartFromBinance = async(symbol, limit, interval, time) => {
     const { from, to } = time;
@@ -39,7 +39,6 @@ function formatTime(time) {
     // time = 15/1/2022
     const timeSplit = time.split('/');
     const [day, month, year] = timeSplit;
-    console.log(`${month}/${day}/${year}`);
     return `${month}/${day}/${year}`;
 }
 

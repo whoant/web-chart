@@ -65,7 +65,7 @@ function Chart(props) {
             {
                 type: "candlestick",
                 showInLegend: true,
-                name: "ETH/USDT DEX",
+                name: `${chartData.symbol} DEX`,
                 yValueFormatString: "###0.00",
                 xValueFormatString: "HH:mm DD/MM/YYYY",
                 visible: state.secondChart,
