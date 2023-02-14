@@ -2,6 +2,7 @@ import { Button, FormControl, Grid, InputLabel, Link, MenuItem, Select, TextFiel
 import PropTypes from 'prop-types';
 import { useReducer, useState } from 'react';
 import moment from 'moment';
+import { LoadingButton } from '@mui/lab';
 
 
 const COUNT_CANDLE_PER_DAY = {
@@ -16,11 +17,12 @@ const COUNT_CANDLE_PER_DAY = {
 
 ControlInput.propTypes = {
     onFileChange: PropTypes.func,
-    onLoadClick: PropTypes.func
-}
+    onLoadClick: PropTypes.func,
+    loading: PropTypes.bool,
+};
 
 function ControlInput(props) {
-    const { onFileChange, onLoadClick } = props;
+    const { onFileChange, onLoadClick, loading } = props;
     const [linkDexScreener, setLinkDexScreener] = useState('');
     const [fileName, setFileName] = useState('Download file');
     const [formInput, setFormInput] = useReducer(
@@ -55,7 +57,6 @@ function ControlInput(props) {
         const name = evt.target.name;
         let newValue = evt.target.value;
         setFormInput({ ...formInput, [name]: newValue });
-
     };
 
     return (<Grid container spacing={2}>
@@ -94,7 +95,7 @@ function ControlInput(props) {
                                 {/*<MenuItem value="1d">1d</MenuItem>*/}
                             </Select>
                         </FormControl>
-                        <Button variant="contained" type="submit">Submit</Button>
+                        <LoadingButton variant="contained" type="submit" loading={loading}>Submit</LoadingButton>
                     </form>
                 </Grid>
             </Grid>
@@ -115,7 +116,6 @@ function ControlInput(props) {
                         <TextField id="outlined-basic" margin="dense" label="SmartContract" variant="outlined"
                                    name="smartContract"
                                    placeholder="" defaultValue={formInput.smartContract} onChange={handleInput}/>
-
                         <Button variant="contained" type="submit">Submit</Button>
                     </form>
                 </Grid>
@@ -126,7 +126,6 @@ function ControlInput(props) {
                                 {fileName}
                             </Link>)
                     }
-
                 </Grid>
             </Grid>
         </Grid>

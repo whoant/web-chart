@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
+    const [loading, setLoading] = useState(false);
     const [chartData, setChartData] = useState({
         firstChart: [],
         secondChart: [],
@@ -60,14 +61,14 @@ function App() {
         const { symbol, interval, from, to } = formData;
 
         try {
-            toast.success("Please wait !!!");
+            setLoading(true);
             const resp = await getChartFromBinance(symbol, '500', interval, { from, to });
             setChartData({ ...chartData, firstChart: resp, interval, symbol })
-
         } catch (e) {
             console.error(e);
             toast.error(`Error : ${e}`);
         }
+        setLoading(false);
     }
 
     const handleShowChart = (event) => {
@@ -84,7 +85,7 @@ function App() {
                        chartData={chartData}/>
             </Grid>
             <Grid item xs={10}>
-                <ControlInput onFileChange={handleFileChange} onLoadClick={handleLoadClick}/>
+                <ControlInput onFileChange={handleFileChange} onLoadClick={handleLoadClick} loading={loading}/>
             </Grid>
             <Grid item xs={2}>
                 <Container maxWidth="sm">
