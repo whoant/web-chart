@@ -20,8 +20,6 @@ root.render(
             draggable
             pauseOnHover
         />
-        {/* Same as */}
-        <ToastContainer/>
     </React.StrictMode>
 );
 
