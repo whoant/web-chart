@@ -24,6 +24,12 @@ function ControlPanel(props) {
                 }
                 label="Show second chart"
             />
+            <FormControlLabel
+                control={
+                    <Switch checked={state.thirdChart} name="thirdChart" onChange={onShowChart}/>
+                }
+                label="Show percent chart"
+            />
         </FormGroup>
     </FormControl>)
 }

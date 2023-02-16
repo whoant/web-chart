@@ -53,24 +53,38 @@ function Chart(props) {
             cursor: "pointer",
             itemclick: toogleDataSeries
         },
-        data: [{
-            type: "candlestick",
-            showInLegend: true,
-            name: `${chartData.symbol} Binance`,
-            yValueFormatString: "###0.00",
-            xValueFormatString: "HH:mm DD/MM/YYYY",
-            visible: state.firstChart,
-            dataPoints: chartData.firstChart
-        },
+        data: [
+            {
+                type: "candlestick",
+                showInLegend: true,
+                name: `${chartData.symbol} Binance`,
+                yValueFormatString: "###0.00",
+                xValueFormatString: "HH:mm DD/MM/YYYY",
+                toolTipContent: "<span style=\"color:#1976d2 \">{name}</span><br>Open: {y[0]}<br>High: {y[1]}<br>Low: {y[2]}<br>Close: {y[3]}",
+                visible: state.firstChart,
+                dataPoints: chartData.firstChart
+            },
             {
                 type: "candlestick",
                 showInLegend: true,
                 name: `${chartData.symbol} DEX`,
                 yValueFormatString: "###0.00",
                 xValueFormatString: "HH:mm DD/MM/YYYY",
+                toolTipContent: "<span style=\"color:#C0504E \">{name}</span><br>Open: {y[0]}<br>High: {y[1]}<br>Low: {y[2]}<br>Close: {y[3]}",
                 visible: state.secondChart,
                 dataPoints: chartData.secondChart
-            }]
+            },
+            {
+                type: "scatter",
+                name: "Percent",
+                showInLegend: true,
+                markerType: "cross",
+                xValueFormatString: "HH:mm DD/MM/YYYY",
+                toolTipContent: "<span style=\"color:#f1c40f \">{name}</span><br>High price: {h}%<br>Low price: {l}%",
+                visible: state.thirdChart,
+                dataPoints: chartData.thirdChart
+            }
+        ]
     }
 
     return (
