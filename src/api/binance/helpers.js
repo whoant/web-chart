@@ -9,16 +9,16 @@ const getChartFromBinance = async(symbol, limit, interval, time) => {
 
     let result = [];
     let endTime = formatToTimestamp(toDate);
-    let isShouldStop = false;
+    let shouldStop = false;
 
-    while (isShouldStop === false) {
+    while (shouldStop === false) {
         try {
             const bars = await getKlines({ symbol, limit, interval, endTime });
             const newBarsReverse = bars.reverse();
             for (const bar of newBarsReverse) {
                 const [timestamp, open, high, low, close] = bar;
                 if (new Date(timestamp) < fromDate) {
-                    isShouldStop = true;
+                    shouldStop = true;
                     break;
                 }
 
@@ -28,7 +28,7 @@ const getChartFromBinance = async(symbol, limit, interval, time) => {
             endTime = newBarsReverse[newBarsReverse.length - 1][0]
         } catch (e) {
             console.error(e);
-            isShouldStop = true;
+            shouldStop = true;
         }
 
     }
