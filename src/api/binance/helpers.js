@@ -35,6 +35,7 @@ const getChartFromBinance = async(symbol, limit, interval, time) => {
     return Promise.resolve(result.reverse());
 };
 
+// convert DD/MM/YYYY -> MM/DD/YYYY
 function formatTime(time) {
     // time = 15/1/2022
     const timeSplit = time.split('/');
@@ -42,5 +43,9 @@ function formatTime(time) {
     return `${month}/${day}/${year}`;
 }
 
+// Convert ETH/USDT -> ETHUSDT
+function convertPairToPlainText(pair) {
+    return pair.split("/").join("");
+}
 
-export { getChartFromBinance };
+export { getChartFromBinance, convertPairToPlainText };

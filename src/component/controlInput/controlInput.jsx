@@ -2,7 +2,6 @@ import {
     Button,
     FormControl,
     Grid,
-    InputAdornment,
     InputLabel,
     Link,
     MenuItem,
@@ -13,14 +12,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { LoadingButton } from '@mui/lab';
-
-
-const COUNT_CANDLE_PER_DAY = {
-    "1m": 60 * 24,
-    "5m": 12 * 24,
-    "15m": 4 * 24,
-    "30m": 2 * 24,
-};
+import { calculateBarsEachInverval } from '../../helpers/time';
 
 ControlInput.propTypes = {
     onFileChange: PropTypes.func,
@@ -66,12 +58,11 @@ function ControlInput(props) {
             onCalculateClick(formInput);
             return;
         }
-
         const from = moment(formInput.from, "DD/MM/YYYY")
         const to = moment(formInput.to, "DD/MM/YYYY")
-        const days = moment.duration(to.diff(from)).asDays();
-        const limit = days * COUNT_CANDLE_PER_DAY[formInput.interval]
-        setLinkDexScreener(`https://io.dexscreener.com/u/chart/bars/${formInput.network}/${formInput.smartContract}?from=${from.unix() * 1000}&to=${(to.unix() + 1) * 1000}&res=${formInput.interval}&cb=${limit}`);
+
+        const barsCount = calculateBarsEachInverval(from, to, formInput.interval);
+        setLinkDexScreener(`https://io.dexscreener.com/u/chart/bars/${formInput.network}/${formInput.smartContract}?from=${from.unix() * 1000}&to=${(to.unix() + 1) * 1000}&res=${formInput.interval}&cb=${barsCount}`);
         setFileName(`${formInput.symbol}-${formInput.from}-${formInput.to}-${formInput.interval}`);
     }
 
