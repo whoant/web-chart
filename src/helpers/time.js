@@ -1,5 +1,12 @@
 import moment from 'moment';
 
+const COUNT_CANDLE_PER_DAY = {
+    "1m": 60 * 24,
+    "5m": 12 * 24,
+    "15m": 4 * 24,
+    "30m": 2 * 24,
+};
+
 const now = () => {
     return moment().unix()
 };
@@ -9,4 +16,10 @@ const formatToTimestamp = time => {
     return moment(date).format('x');
 };
 
-export { now, formatToTimestamp };
+// calculate numbers of candle each interval
+const calculateBarsEachInverval = (from, to, interval) => {
+    const days = moment.duration(to.diff(from)).asDays();
+    return days * COUNT_CANDLE_PER_DAY[interval]
+};
+
+export { now, formatToTimestamp, calculateBarsEachInverval };
