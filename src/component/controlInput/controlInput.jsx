@@ -13,6 +13,7 @@ import { useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { LoadingButton } from '@mui/lab';
 import { calculateBarsEachInverval } from '../../helpers/time';
+import { reduceBars } from '../../api/dexscreener/helpers';
 
 ControlInput.propTypes = {
     onFileChange: PropTypes.func,
@@ -58,8 +59,8 @@ function ControlInput(props) {
             onCalculateClick(formInput);
             return;
         }
-        const from = moment(formInput.from, "DD/MM/YYYY")
-        const to = moment(formInput.to, "DD/MM/YYYY")
+        const from = moment(formInput.from, "DD/MM/YYYY");
+        const to = moment(formInput.to, "DD/MM/YYYY");
 
         const barsCount = calculateBarsEachInverval(from, to, formInput.interval);
         setLinkDexScreener(`https://io.dexscreener.com/u/chart/bars/${formInput.network}/${formInput.smartContract}?from=${from.unix() * 1000}&to=${(to.unix() + 1) * 1000}&res=${formInput.interval}&cb=${barsCount}`);
@@ -72,18 +73,9 @@ function ControlInput(props) {
 
         reader.onload = async({ target }) => {
             const parsedData = JSON.parse(target.result);
-            const result = [];
-            const minFrom = formInput.from;
-            parsedData?.bars.forEach(bar => {
-                const { close, high, low, open, timestamp } = bar;
-                if (moment(timestamp) > moment(minFrom, 'DD/MM/YYYY')) {
-                    result.push({
-                        x: new Date(Number(timestamp)),
-                        y: [Number(open), Number(high), Number(low), Number(close)]
-                    });
-                }
-            })
-            onFileChange(e, result);
+            const newBars = reduceBars(parsedData.bars, formInput.from);
+            
+            onFileChange(e, newBars);
         };
         reader.readAsText(file);
     };

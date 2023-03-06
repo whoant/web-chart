@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.10.5",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.0",
+    "@mui/joy": "^5.0.0-alpha.69",
     "@mui/lab": "^5.0.0-alpha.119",
     "@mui/material": "^5.11.8",
     "@testing-library/jest-dom": "^5.16.5",
@@ -16,13 +17,14 @@
     "moment": "^2.29.4",
     "papaparse": "^5.3.2",
     "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --no-cache",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

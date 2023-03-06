@@ -11,8 +11,8 @@ const now = () => {
     return moment().unix()
 };
 
-const formatToTimestamp = time => {
-    const date = moment(time).format('MM/DD/YYYY');
+const formatToTimestamp = (time, format = 'MM/DD/YYYY') => {
+    const date = moment(time).format(format);
     return moment(date).format('x');
 };
 

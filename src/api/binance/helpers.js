@@ -15,6 +15,7 @@ const getChartFromBinance = async(symbol, limit, interval, time) => {
         try {
             const bars = await getKlines({ symbol, limit, interval, endTime });
             const newBarsReverse = bars.reverse();
+
             for (const bar of newBarsReverse) {
                 const [timestamp, open, high, low, close] = bar;
                 if (new Date(timestamp) < fromDate) {
