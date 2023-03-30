@@ -33,7 +33,7 @@ const getChartFromBinance = async(symbol, limit, interval, time) => {
         }
 
     }
-    return Promise.resolve(result.reverse());
+    return result.reverse();
 };
 
 // convert DD/MM/YYYY -> MM/DD/YYYY

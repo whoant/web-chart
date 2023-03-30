@@ -53,7 +53,11 @@ function CompareData() {
     const handleFileChange = (e, result) => {
         const typeChart = e.target.name;
         setChartData({ ...chartData, [typeChart]: result })
-    }
+    };
+
+    const handleSecondChartSubmit = bars => {
+        setChartData({ ...chartData, secondChart: bars });
+    };
 
     const handleLoadClick = async formData => {
         const { symbol, interval, from, to } = formData;
@@ -67,14 +71,14 @@ function CompareData() {
             toast.error(`Error : ${e}`);
         }
         setIsLoading(false);
-    }
+    };
 
     const handleShowChart = (event) => {
         setIsShow({
             ...isShow,
             [event.target.name]: event.target.checked
         })
-    }
+    };
 
     return (
         <Grid container spacing={2}>
@@ -83,7 +87,8 @@ function CompareData() {
             </Grid>
             <Grid item xs={10}>
                 <ControlInput onFileChange={handleFileChange} onLoadClick={handleLoadClick} isLoading={isLoading}
-                              onCalculateClick={handleCalculateClick} occurrenceCount={occurrenceCount}/>
+                              onCalculateClick={handleCalculateClick} occurrenceCount={occurrenceCount}
+                              handleSecondChartSubmit={handleSecondChartSubmit}/>
             </Grid>
             <Grid item xs={2}>
                 <Container maxWidth="sm">

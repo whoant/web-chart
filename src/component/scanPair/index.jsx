@@ -84,14 +84,8 @@ function ScanPair() {
         setPairs([]);
         setIsLoading(true)
         getAvailablePairs(formInput);
-
     };
-    //
-    // useEffect(() => {
-    //
-    //     getAvailablePairs();
-    // }, []);
-
+    
     const handleInput = evt => {
         const name = evt.target.name;
         let newValue = evt.target.value;

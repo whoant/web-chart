@@ -13,18 +13,20 @@ import { useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { LoadingButton } from '@mui/lab';
 import { calculateBarsEachInverval } from '../../helpers/time';
-import { reduceBars } from '../../api/dexscreener/helpers';
+import { getDexFromPairAddress, reduceBars } from '../../api/dexscreener/helpers';
+import { fetchApiFromCloudflareWorker, getInfoPair } from '../../api/dexscreener/api';
 
 ControlInput.propTypes = {
     onFileChange: PropTypes.func,
     onLoadClick: PropTypes.func,
     onCalculateClick: PropTypes.func,
+    handleSecondChartSubmit: PropTypes.func,
     isLoading: PropTypes.bool,
     occurrenceCount: PropTypes.number,
 };
 
 function ControlInput(props) {
-    const { onFileChange, onLoadClick, isLoading, onCalculateClick, occurrenceCount } = props;
+    const { onFileChange, onLoadClick, isLoading, onCalculateClick, occurrenceCount, handleSecondChartSubmit } = props;
     const [linkDexScreener, setLinkDexScreener] = useState('');
     const [fileName, setFileName] = useState('Download file');
     const [formInput, setFormInput] = useReducer(
@@ -48,7 +50,7 @@ function ControlInput(props) {
         setOccurrenceCountPercent(occurrenceCount / days);
     }, [occurrenceCount])
 
-    const handleOnSubmit = e => {
+    const handleOnSubmit = async e => {
         e.preventDefault();
         const btnType = e.target.name
 
@@ -63,9 +65,20 @@ function ControlInput(props) {
         const to = moment(formInput.to, "DD/MM/YYYY");
 
         const barsCount = calculateBarsEachInverval(from, to, formInput.interval);
-        setLinkDexScreener(`https://io.dexscreener.com/u/chart/bars/${formInput.network}/${formInput.smartContract}?from=${from.unix() * 1000}&to=${(to.unix() + 1) * 1000}&res=${formInput.interval}&cb=${barsCount}`);
-        setFileName(`${formInput.symbol}-${formInput.from}-${formInput.to}-${formInput.interval}`);
-    }
+        const { chainId, pairAddress, quoteToken } = await getInfoPair(formInput.network, formInput.smartContract);
+        const barUrl = await getDexFromPairAddress({
+            chainId,
+            pairAddress,
+            interval: formInput.interval,
+            from,
+            to,
+            barsCount,
+            quoteAddress: quoteToken.address
+        });
+        const barFromDex = await fetchApiFromCloudflareWorker(barUrl.url);
+        const newBars = reduceBars(barFromDex.bars, formInput.from);
+        handleSecondChartSubmit(newBars);
+    };
 
     const handleFileSubmit = e => {
         const file = e.target.files[0];
@@ -74,7 +87,7 @@ function ControlInput(props) {
         reader.onload = async({ target }) => {
             const parsedData = JSON.parse(target.result);
             const newBars = reduceBars(parsedData.bars, formInput.from);
-            
+            console.log(newBars);
             onFileChange(e, newBars);
         };
         reader.readAsText(file);
@@ -147,7 +160,7 @@ function ControlInput(props) {
                         <TextField id="outlined-basic" margin="dense" label="SmartContract" variant="outlined"
                                    name="smartContract"
                                    placeholder="" defaultValue={formInput.smartContract} onChange={handleInput}/>
-                        <Button variant="contained" type="submit">Submit</Button>
+                        <LoadingButton variant="contained" type="submit" loading={isLoading}>Submit</LoadingButton>
                     </form>
                 </Grid>
                 <Grid item xs={12}>

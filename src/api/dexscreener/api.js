@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { generateBarUrl } from './helpers';
 
-const searchPair = async pair => {
-    try {
-        const { data } = await axios.get(`https://api.dexscreener.com/latest/dex/search/?q=${pair}`);
-        return Promise.resolve(data.pairs);
-    } catch (e) {
-        return Promise.reject(e);
-    }
+const searchPairs = async pair => {
+    const { data } = await axios.get(`https://api.dexscreener.com/latest/dex/search/?q=${pair}`);
+    return data.pairs;
+};
+
+const getInfoPair = async(chainId, pairAddresses) => {
+    const { data } = await axios.get(`https://api.dexscreener.com/latest/dex/pairs/${chainId}/${pairAddresses}`);
+    return data.pair;
 };
 
 const getKLines = kLineRequest => {
@@ -17,18 +18,14 @@ const getKLines = kLineRequest => {
     return fetchApiFromCloudflareWorker(dexScreenerUrl);
 };
 
-const getInfoPair = ({ chainId, pairAddress }) => {
+const getInfoPairByHtml = ({ chainId, pairAddress }) => {
     const url = `https://dexscreener.com/${chainId}/${pairAddress}?embed=1&trades=0&info=0&inverted=0&chartLeftTollbar=0&theme=light`;
     return fetchApiFromCloudflareWorker(url);
 };
 
 const fetchApiFromCloudflareWorker = async(url) => {
-    try {
-        const { data } = await axios.get(`https://cloudflare-worker.whoant.workers.dev/${url}`);
-        return Promise.resolve(data);
-    } catch (e) {
-        return Promise.reject(e);
-    }
-}
+    const { data } = await axios.get(`https://cloudflare-worker.whoant.workers.dev/${url}`);
+    return data;
+};
 
-export { searchPair, getKLines, getInfoPair, fetchApiFromCloudflareWorker };
+export { searchPairs, getKLines, getInfoPairByHtml, fetchApiFromCloudflareWorker, getInfoPair };
