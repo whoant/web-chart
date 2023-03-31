@@ -6,6 +6,7 @@ import ScanPair from './component/scanPair';
 function App() {
     return (
         <Routes>
+            <Route path="/compare/:id" element={<CompareData/>}/>
             <Route path="/compare" element={<CompareData/>}/>
             <Route path="/scan" element={<ScanPair/>}/>
         </Routes>

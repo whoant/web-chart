@@ -4,6 +4,7 @@ import { getBestPrice, getKlines } from '../binance/api';
 import { convertPairToPlainText, getChartFromBinance } from '../binance/helpers';
 import { calculateBarsEachInverval, formatToTimestamp } from '../../helpers/time';
 import { calculateDifferentData } from '../../helpers/chart';
+import { createBin } from '../paste/client';
 
 const THRESHOLD = 10;
 
@@ -85,28 +86,35 @@ const calculateBarChart = async({ symbol, from, to, interval, threshold }) => {
             ...bar.value
         });
     });
-    console.log({ availableUrls });
+
     const barsFromDex = await Promise.allSettled(availableUrls.map(r => fetchApiFromCloudflareWorker(r.url)));
     const barFromCex = await getChartFromBinance(convertPairToPlainText(symbol), 1000, interval, {
         from: from.format("DD/MM/YYYY"),
         to: to.format("DD/MM/YYYY")
     });
 
-    // const thirdChart = calculateThirdChart(chartData.firstChart, chartData.secondChart, formData.threshold);
-    const availableData = [];
-    barsFromDex.forEach((barFromDex, index) => {
+    const availableData = await Promise.all(barsFromDex.map(async(barFromDex, index) => {
         if (barFromDex.status === 'rejected') return;
         const formatBarsFromDex = reduceBars(barFromDex.value.bars, from)
+        const createBinResp = await createBin({
+            firstChart: barFromCex,
+            secondChart: formatBarsFromDex,
+            from,
+            to,
+            interval,
+            symbol: availableUrls[index].symbol
+        });
+        const [, id] = createBinResp.split('fyi/')
+
         const differentData = calculateDifferentData(barFromCex, formatBarsFromDex, threshold);
         const occurrenceCount = `${differentData.length}/${barFromCex.length}`
-        availableData.push({
+        return {
             ...availableUrls[index],
-            // barsFromDex: reduceBars(barFromDex.value.bars, from),
-            // barsFromCex: barFromCex,
             baseSymbol: symbol,
-            occurrenceCount
-        });
-    });
+            occurrenceCount,
+            id,
+        };
+    }));
 
     return availableData;
 };

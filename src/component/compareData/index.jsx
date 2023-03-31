@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
-import { calculateDifferentData, convertChartToMap } from '../../helpers/chart';
+import { calculateDifferentData } from '../../helpers/chart';
 import { getChartFromBinance } from '../../api/binance/helpers';
 import { toast } from 'react-toastify';
 import { Container, Grid } from '@mui/material';
 import Chart from '../chart/chart';
 import ControlInput from '../controlInput/controlInput';
 import ControlPanel from '../controlPanel/controlPanel';
-
+import { useParams } from 'react-router-dom';
+import { createBin, readBin } from '../../api/paste/client';
 
 function CompareData() {
-    const [isLoading, setIsLoading] = useState(false);
+    const params = useParams();
 
+    const [isLoading, setIsLoading] = useState(false);
     const [occurrenceCount, setOccurrenceCount] = useState(0);
     const [chartData, setChartData] = useState({
         firstChart: [],
@@ -25,29 +27,36 @@ function CompareData() {
         secondChart: true,
         thirdChart: true
     });
-    //
-    // useEffect(() => {
-    //     const test = async() => {
-    //         const { data } = await axios.get("https://api.dexscreener.com/latest/dex/search/?q=BNB/USDT");
-    //         console.log(data);
-    //     }
-    //
-    //     test();
-    // }, []);
 
-    // useEffect(() => {
-    //     const firstChart = getTempChartFromBinance();
-    //     const secondChart = getTempChartFromDex('14/02/2023');
-    //     const thirdChart = calculateThirdChart(firstChart, secondChart, 0.5);
-    //     setOccurrenceCount(thirdChart.length);
-    //     setChartData({ ...chartData, firstChart, secondChart, thirdChart })
-    // }, []);
+    useEffect(() => {
+        const renderBin = async() => {
+            if (params.id === undefined) return;
+            const record = await readBin(params.id);
+            record.firstChart = record.firstChart.map(data => {
+                return {
+                    ...data,
+                    x: new Date(data.x)
+                }
+            });
+            record.secondChart = record.secondChart.map(data => {
+                return {
+                    ...data,
+                    x: new Date(data.x)
+                }
+            });
 
+            setChartData(record);
+        };
+
+        renderBin();
+    }, []);
 
     const handleCalculateClick = async formData => {
         const thirdChart = calculateDifferentData(chartData.firstChart, chartData.secondChart, formData.threshold);
         setOccurrenceCount(thirdChart.length);
         setChartData({ ...chartData, thirdChart })
+        const data = await createBin(JSON.stringify(chartData));
+        console.log(data);
     };
 
     const handleFileChange = (e, result) => {
@@ -65,6 +74,7 @@ function CompareData() {
         try {
             setIsLoading(true);
             const firstChart = await getChartFromBinance(symbol, '1000', interval, { from, to });
+            console.log(firstChart);
             setChartData({ ...chartData, firstChart, interval, symbol })
         } catch (e) {
             console.error(e);

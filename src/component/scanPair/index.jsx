@@ -28,6 +28,7 @@ const columns = [
     { id: 'chainId', label: 'Chain Id' },
     { id: 'pairAddress', label: 'Pair address' },
     { id: 'occurrenceCount', label: 'Occurrence count' },
+    { id: 'detail', label: 'Detail' },
 ];
 
 function ScanPair() {
@@ -44,19 +45,7 @@ function ScanPair() {
         }
     );
 
-
     const getAvailablePairs = async({ symbols, interval, from, to, threshold }) => {
-        // const pairsInDex = await Promise.allSettled(SYMBOLS.map(s => searchPair(s)));
-        // const bestPrices = await Promise.allSettled(SYMBOLS.map(s => {
-        //     const symbol = convertPairToPlainText(s);
-        //     return getBestPrice(symbol);
-        // }));
-        //
-        // const availablePairs = [];
-        // pairsInDex.forEach((pairs, index) => {
-        //     if (pairs.status === 'rejected' || bestPrices[index].status === 'rejected') return;
-        //     availablePairs.push(reducePairInDex(pairs.value, bestPrices[index].value.price));
-        // });
         const newSymbols = symbols.split('\n');
 
         const newPairs = await Promise.allSettled(newSymbols.map(s => calculateBarChart({
@@ -80,12 +69,11 @@ function ScanPair() {
 
     const handleOnSubmit = e => {
         e.preventDefault();
-        console.log(formInput);
         setPairs([]);
         setIsLoading(true)
         getAvailablePairs(formInput);
     };
-    
+
     const handleInput = evt => {
         const name = evt.target.name;
         let newValue = evt.target.value;
@@ -94,7 +82,6 @@ function ScanPair() {
 
     return (
         <div>
-
             <form onSubmit={handleOnSubmit}>
                 <Grid container>
                     <Grid item xs={6}>
@@ -162,6 +149,8 @@ function ScanPair() {
                                                   href={`https://dexscreener.com/${p.chainId}/${p.pairAddress}`}>{p.pairAddress}</Link>
                                         </TableCell>
                                         <TableCell>{p.occurrenceCount}</TableCell>
+                                        <TableCell><Link target="_blank"
+                                                         href={`./compare/${p.id}`}>More !!</Link></TableCell>
                                     </TableRow>);
                                 })
                             }

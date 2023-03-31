@@ -87,7 +87,6 @@ function ControlInput(props) {
         reader.onload = async({ target }) => {
             const parsedData = JSON.parse(target.result);
             const newBars = reduceBars(parsedData.bars, formInput.from);
-            console.log(newBars);
             onFileChange(e, newBars);
         };
         reader.readAsText(file);
