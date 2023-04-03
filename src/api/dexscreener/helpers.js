@@ -99,15 +99,17 @@ const calculateBarChart = async({ symbol, from, to, interval, threshold }) => {
         const createBinResp = await createBin({
             firstChart: barFromCex,
             secondChart: formatBarsFromDex,
-            from,
-            to,
+            from: from.format("DD/MM/YYYY"),
+            to: to.format("DD/MM/YYYY"),
             interval,
-            symbol: availableUrls[index].symbol
+            baseSymbol: symbol,
+            ...availableUrls[index]
         });
         const [, id] = createBinResp.split('fyi/')
 
         const differentData = calculateDifferentData(barFromCex, formatBarsFromDex, threshold);
-        const occurrenceCount = `${differentData.length}/${barFromCex.length}`
+        const occurrenceCount = `${differentData.length}/${barFromCex.length}`;
+
         return {
             ...availableUrls[index],
             baseSymbol: symbol,

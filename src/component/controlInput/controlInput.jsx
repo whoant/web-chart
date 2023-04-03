@@ -26,9 +26,7 @@ ControlInput.propTypes = {
 };
 
 function ControlInput(props) {
-    const { onFileChange, onLoadClick, isLoading, onCalculateClick, occurrenceCount, handleSecondChartSubmit } = props;
-    const [linkDexScreener, setLinkDexScreener] = useState('');
-    const [fileName, setFileName] = useState('Download file');
+    const { onLoadClick, isLoading, onCalculateClick, occurrenceCount, handleSecondChartSubmit } = props;
     const [formInput, setFormInput] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
@@ -80,17 +78,6 @@ function ControlInput(props) {
         handleSecondChartSubmit(newBars);
     };
 
-    const handleFileSubmit = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = async({ target }) => {
-            const parsedData = JSON.parse(target.result);
-            const newBars = reduceBars(parsedData.bars, formInput.from);
-            onFileChange(e, newBars);
-        };
-        reader.readAsText(file);
-    };
 
     const handleInput = evt => {
         const name = evt.target.name;
@@ -98,111 +85,7 @@ function ControlInput(props) {
         setFormInput({ ...formInput, [name]: newValue });
     };
 
-    return (<Grid container spacing={2}>
-        <Grid item xs={3}>
-            <Grid container spacing={6}>
-                <Grid item xs={12}>
-                    <form onSubmit={handleOnSubmit} name="cex">
-                        <TextField id="outlined-basic" margin="dense" label="From" variant="outlined" name="from"
-                                   placeholder="1/1/2023" defaultValue={formInput.from} onChange={handleInput}/>
-                        <TextField id="outlined-basic" margin="dense" label="To" variant="outlined" name="to"
-                                   placeholder="10/1/2023" defaultValue={formInput.to} onChange={handleInput}/>
-                    </form>
-                </Grid>
-            </Grid>
-        </Grid>
-        <Grid item xs={3}>
-            <Grid container spacing={6}>
-                <Grid item xs={12}>
-                    <Button variant="contained" component="label">
-                        Choose first file
-                        <input hidden accept="text/csv" type="file" name="firstChart" onChange={handleFileSubmit}/>
-                    </Button>
-                </Grid>
-                <Grid item xs={12}>
-                    <form onSubmit={handleOnSubmit} name="cex">
-                        <TextField id="outlined-basic" margin="dense" label="Symbol" variant="outlined" name="symbol"
-                                   placeholder="BTCUSDT" defaultValue={formInput.symbol} onChange={handleInput}/>
-                        <FormControl sx={{ m: 1, minWidth: 120 }}>
-                            <InputLabel id="interval-label">Interval</InputLabel>
-                            <Select
-                                labelId="interval-label"
-                                id="interval-helper"
-                                value={formInput.interval}
-                                label="Interval"
-                                name="interval"
-                                onChange={handleInput}>
-                                <MenuItem value="1m">1m</MenuItem>
-                                <MenuItem value="5m">5m</MenuItem>
-                                <MenuItem value="15m">15m</MenuItem>
-                                <MenuItem value="30m">30m</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <LoadingButton variant="contained" type="submit" loading={isLoading}>Submit</LoadingButton>
-                    </form>
-                </Grid>
-            </Grid>
-        </Grid>
-        <Grid item xs={3}>
-            <Grid container spacing={6}>
-                <Grid item xs={12}>
-                    <Button variant="contained" component="label" color="error">
-                        Choose second file
-                        <input hidden accept="text" type="file" name="secondChart"
-                               onChange={handleFileSubmit}/>
-                    </Button>
-                </Grid>
-                <Grid item xs={12}>
-                    <form onSubmit={handleOnSubmit} name="dex">
-                        <TextField id="outlined-basic" margin="dense" label="Network" variant="outlined" name="network"
-                                   placeholder="bsc" defaultValue={formInput.network} onChange={handleInput}/>
-                        <TextField id="outlined-basic" margin="dense" label="SmartContract" variant="outlined"
-                                   name="smartContract"
-                                   placeholder="" defaultValue={formInput.smartContract} onChange={handleInput}/>
-                        <LoadingButton variant="contained" type="submit" loading={isLoading}>Submit</LoadingButton>
-                    </form>
-                </Grid>
-                <Grid item xs={12}>
-                    {
-                        linkDexScreener && (
-                            <Link href={linkDexScreener} underline="always" target="_blank" download='abc.json'>
-                                {fileName}
-                            </Link>)
-                    }
-                </Grid>
-            </Grid>
-        </Grid>
-        <Grid item xs={3}>
-            <Grid container spacing={6}>
-                <Grid item xs={12}>
-                    <form onSubmit={handleOnSubmit} name="percent">
-                        <TextField id="outlined-basic" margin="dense" label="Threshold" variant="outlined"
-                                   name="threshold"
-                                   placeholder="2" defaultValue={formInput.threshold} onChange={handleInput}/>
-                        <Button variant="contained" type="submit">Calculate</Button>
-                    </form>
-
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        disabled
-                        id="outlined-disabled"
-                        label="Occurrence count"
-                        value={occurrenceCount}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        disabled
-                        id="outlined-disabled"
-                        label="Occurrence count / day"
-                        value={occurrenceCountPercent}
-                    />
-                </Grid>
-            </Grid>
-        </Grid>
-
-    </Grid>);
+    return (<div></div>);
 }
 
 

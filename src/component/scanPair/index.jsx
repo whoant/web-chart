@@ -37,7 +37,7 @@ function ScanPair() {
     const [formInput, setFormInput] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-            symbols: "ETH/USDT\nBNB/USDT",
+            symbols: "ETH/USDT",
             interval: "1m",
             from: moment().subtract(2, 'days').format("DD/MM/YYYY"),
             to: moment().format("DD/MM/YYYY"),
