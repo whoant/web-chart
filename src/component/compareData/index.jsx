@@ -43,7 +43,7 @@ function CompareData() {
             if (params.id === undefined) return;
             const record = await readBin(params.id);
             const newChartData = { ...chartData };
-            
+
             newChartData.firstChart = record.firstChart.map(data => {
                 return {
                     ...data,
@@ -134,114 +134,114 @@ function CompareData() {
     };
 
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <Chart state={isShow} chartData={chartData}/>
-            </Grid>
-            <Grid item xs={10}>
-                <Grid container spacing={2}>
-                    <Grid item xs={3}>
-                        <Grid container spacing={6}>
-                            <Grid item xs={12}>
-                                <form onSubmit={handleDexClick} name="cex">
-                                    <TextField id="outlined-basic" margin="dense" label="From" variant="outlined"
-                                               name="from"
-                                               placeholder="1/1/2023" value={chartData.from}
-                                               onChange={handleInput}/>
-                                    <TextField id="outlined-basic" margin="dense" label="To" variant="outlined"
-                                               name="to"
-                                               placeholder="10/1/2023" value={chartData.to}
-                                               onChange={handleInput}/>
-                                    <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                        <InputLabel id="interval-label">Interval</InputLabel>
-                                        <Select
-                                            labelId="interval-label"
-                                            id="interval-helper"
-                                            value={chartData.interval}
-                                            label="Interval"
-                                            name="interval"
-                                            onChange={handleInput}>
-                                            <MenuItem value="1m">1m</MenuItem>
-                                            <MenuItem value="5m">5m</MenuItem>
-                                            <MenuItem value="15m">15m</MenuItem>
-                                            <MenuItem value="30m">30m</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </form>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Grid container spacing={6}>
-                            <Grid item xs={12}>
-                                <form onSubmit={handleBinanceClick} name="cex">
-                                    <TextField id="outlined-basic" margin="dense" label="Symbol" variant="outlined"
-                                               name="symbol"
-                                               placeholder="BTCUSDT" value={chartData.symbol}
-                                               onChange={handleInput}/>
+      <Grid container spacing={2}>
+          <Grid item xs={12}>
+              <Chart state={isShow} chartData={chartData}/>
+          </Grid>
+          <Grid item xs={10}>
+              <Grid container spacing={2}>
+                  <Grid item xs={3}>
+                      <Grid container spacing={6}>
+                          <Grid item xs={12}>
+                              <form onSubmit={handleDexClick} name="cex">
+                                  <TextField id="outlined-basic" margin="dense" label="From" variant="outlined"
+                                             name="from"
+                                             placeholder="1/1/2023" value={chartData.from}
+                                             onChange={handleInput}/>
+                                  <TextField id="outlined-basic" margin="dense" label="To" variant="outlined"
+                                             name="to"
+                                             placeholder="10/1/2023" value={chartData.to}
+                                             onChange={handleInput}/>
+                                  <FormControl sx={{ m: 1, minWidth: 120 }}>
+                                      <InputLabel id="interval-label">Interval</InputLabel>
+                                      <Select
+                                        labelId="interval-label"
+                                        id="interval-helper"
+                                        value={chartData.interval}
+                                        label="Interval"
+                                        name="interval"
+                                        onChange={handleInput}>
+                                          <MenuItem value="1">1m</MenuItem>
+                                          <MenuItem value="5">5m</MenuItem>
+                                          <MenuItem value="15">15m</MenuItem>
+                                          <MenuItem value="30">30m</MenuItem>
+                                      </Select>
+                                  </FormControl>
+                              </form>
+                          </Grid>
+                      </Grid>
+                  </Grid>
+                  <Grid item xs={3}>
+                      <Grid container spacing={6}>
+                          <Grid item xs={12}>
+                              <form onSubmit={handleBinanceClick} name="cex">
+                                  <TextField id="outlined-basic" margin="dense" label="Symbol" variant="outlined"
+                                             name="symbol"
+                                             placeholder="BTCUSDT" value={chartData.symbol}
+                                             onChange={handleInput}/>
 
-                                    <LoadingButton variant="contained" type="submit"
-                                                   loading={isLoading}>Submit CEX</LoadingButton>
-                                </form>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Grid container spacing={6}>
-                            <Grid item xs={12}>
-                                <form onSubmit={handleDexClick} name="dex">
-                                    <TextField id="outlined-basic" margin="dense" label="Network" variant="outlined"
-                                               name="network"
-                                               placeholder="bsc" value={chartData.network}
-                                               onChange={handleInput}/>
-                                    <TextField id="outlined-basic" margin="dense" label="SmartContract"
-                                               variant="outlined"
-                                               name="smartContract"
-                                               placeholder="" value={chartData.smartContract}
-                                               onChange={handleInput}/>
-                                    <LoadingButton variant="contained" type="submit">Submit DEX</LoadingButton>
-                                </form>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Grid container spacing={6}>
-                            <Grid item xs={12}>
-                                <form onSubmit={handleCalculateClick} name="percent">
-                                    <TextField id="outlined-basic" margin="dense" label="Threshold" variant="outlined"
-                                               name="threshold"
-                                               placeholder="2" defaultValue={chartData.threshold}
-                                               onChange={handleInput}/>
-                                    <Button variant="contained" type="submit">Calculate</Button>
-                                </form>
+                                  <LoadingButton variant="contained" type="submit"
+                                                 loading={isLoading}>Submit CEX</LoadingButton>
+                              </form>
+                          </Grid>
+                      </Grid>
+                  </Grid>
+                  <Grid item xs={3}>
+                      <Grid container spacing={6}>
+                          <Grid item xs={12}>
+                              <form onSubmit={handleDexClick} name="dex">
+                                  <TextField id="outlined-basic" margin="dense" label="Network" variant="outlined"
+                                             name="network"
+                                             placeholder="bsc" value={chartData.network}
+                                             onChange={handleInput}/>
+                                  <TextField id="outlined-basic" margin="dense" label="SmartContract"
+                                             variant="outlined"
+                                             name="smartContract"
+                                             placeholder="" value={chartData.smartContract}
+                                             onChange={handleInput}/>
+                                  <LoadingButton variant="contained" type="submit">Submit DEX</LoadingButton>
+                              </form>
+                          </Grid>
+                      </Grid>
+                  </Grid>
+                  <Grid item xs={3}>
+                      <Grid container spacing={6}>
+                          <Grid item xs={12}>
+                              <form onSubmit={handleCalculateClick} name="percent">
+                                  <TextField id="outlined-basic" margin="dense" label="Threshold" variant="outlined"
+                                             name="threshold"
+                                             placeholder="2" defaultValue={chartData.threshold}
+                                             onChange={handleInput}/>
+                                  <Button variant="contained" type="submit">Calculate</Button>
+                              </form>
 
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    disabled
-                                    id="outlined-disabled"
-                                    label="Occurrence count"
-                                    value={occurrenceCount}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    disabled
-                                    id="outlined-disabled"
-                                    label="Occurrence count / day"
-                                    value={occurrenceCountPercent}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid item xs={2}>
-                <Container maxWidth="sm">
-                    <ControlPanel onShowChart={handleShowChart} state={isShow}/>
-                </Container>
-            </Grid>
-        </Grid>
+                          </Grid>
+                          <Grid item xs={6}>
+                              <TextField
+                                disabled
+                                id="outlined-disabled"
+                                label="Occurrence count"
+                                value={occurrenceCount}
+                              />
+                          </Grid>
+                          <Grid item xs={6}>
+                              <TextField
+                                disabled
+                                id="outlined-disabled"
+                                label="Occurrence count / day"
+                                value={occurrenceCountPercent}
+                              />
+                          </Grid>
+                      </Grid>
+                  </Grid>
+              </Grid>
+          </Grid>
+          <Grid item xs={2}>
+              <Container maxWidth="sm">
+                  <ControlPanel onShowChart={handleShowChart} state={isShow}/>
+              </Container>
+          </Grid>
+      </Grid>
     );
 }
 
